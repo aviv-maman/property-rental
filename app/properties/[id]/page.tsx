@@ -1,3 +1,4 @@
+'use client';
 interface PropertyPageProps {}
 
 const PropertyPage: React.FC<PropertyPageProps> = (props) => {
