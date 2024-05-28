@@ -1,3 +1,14 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": ["eslint:recommended", "next", "plugin:@typescript-eslint/recommended"],
+  "rules": {
+    "no-console": "warn",
+    "no-empty-pattern": "warn",
+    "no-unused-vars": "warn",
+    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/no-empty-interface": "warn",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/consistent-type-imports": "error"
+    // "@typescript-eslint/consistent-type-exports": "error",
+  },
+  "plugins": ["@typescript-eslint"]
 }
