@@ -1,4 +1,6 @@
 import connectDB from '@/config/database';
+import PropertyModel from '@/models/Property';
+import type { Property } from '@/utils/database.types';
 import type { NextRequest } from 'next/server';
 
 // GET /api/properties
@@ -6,12 +8,20 @@ export const GET = async (request: NextRequest) => {
   try {
     await connectDB();
 
-    const page = request.nextUrl.searchParams.get('page') || 1;
-    const pageSize = request.nextUrl.searchParams.get('pageSize') || 6;
+    const page = Number(request.nextUrl.searchParams.get('page')) || 1;
+    const pageSize = Number(request.nextUrl.searchParams.get('pageSize')) || 6;
 
-    const skip = (Number(page) - 1) * Number(pageSize);
+    const skip = (page - 1) * pageSize;
 
-    return new Response(JSON.stringify({}), {
+    const total = await PropertyModel.countDocuments({});
+    const properties: Property[] = await PropertyModel.find({}).skip(skip).limit(pageSize);
+
+    const result = {
+      total,
+      properties,
+    };
+
+    return new Response(JSON.stringify(result), {
       status: 200,
     });
   } catch (error) {

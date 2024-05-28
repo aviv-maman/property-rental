@@ -4,10 +4,9 @@ import PropertyCard from '@/components/PropertyCard';
 import type { Property } from '@/utils/database.types';
 import Spinner from '@/components/Spinner';
 import Pagination from '@/components/Pagination';
-import mockProperties from '@/properties.json';
 
 const Properties: React.FC = () => {
-  const [properties, setProperties] = useState((mockProperties || []) as Property[]);
+  const [properties, setProperties] = useState([] as Property[]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(6);
