@@ -22,7 +22,14 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
 
   return (
     <div className='rounded-xl shadow-md relative'>
-      <Image src={'/images/properties/' + property.images[0]} alt='' height={0} width={0} sizes='100vw' className='w-full h-auto rounded-t-xl' />
+      <Image
+        src={`/images/properties/${property.images[0]}`}
+        alt={property.images[0] || ''}
+        height={0}
+        width={0}
+        sizes='100vw'
+        className='w-full h-auto rounded-t-xl'
+      />
       <div className='p-4'>
         <div className='text-left md:text-center lg:text-left mb-6'>
           <div className='text-gray-600'>{property.type}</div>
