@@ -63,4 +63,5 @@ const PropertySearchForm: React.FC = () => {
     </form>
   );
 };
+
 export default PropertySearchForm;
