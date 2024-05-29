@@ -1,7 +1,7 @@
 import connectDB from '@/config/database';
 import PropertyModel from '@/models/Property';
 import type { Property } from '@/utils/database.types';
-import { NextResponse, type NextRequest } from 'next/server';
+import { type NextRequest } from 'next/server';
 
 type RequestParams = { params: { id: string } };
 
@@ -10,12 +10,10 @@ export const GET = async (request: NextRequest, { params }: RequestParams) => {
   try {
     await connectDB();
     const property: Property | null = await PropertyModel.findById(params.id);
-    if (!property) return NextResponse.json('Property not found', { status: 404 });
-    return NextResponse.json(property, {
-      status: 200,
-    });
+    if (!property) return new Response(JSON.stringify({ message: 'Property not found' }), { status: 404, statusText: 'Not Found' });
+    return new Response(JSON.stringify(property), { status: 200, statusText: 'OK' });
   } catch (error) {
     console.log(error);
-    return NextResponse.json('Something went wrong', { status: 500 });
+    return new Response(JSON.stringify({ message: 'Something went wrong' }), { status: 500, statusText: 'Internal Server Error' });
   }
 };
