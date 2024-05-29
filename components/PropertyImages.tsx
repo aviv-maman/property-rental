@@ -27,7 +27,7 @@ const PropertyImages: React.FC<{ images?: string[] }> = ({ images }) => {
                 <div
                   key={index}
                   className={`
-                  ${images?.length === 3 && index === 2 ? 'col-span-2' : 'col-span-1'}
+                  ${images.length === 3 && index === 2 ? 'col-span-2' : 'col-span-1'}
                 `}>
                   <Item original={image} thumbnail={image} width='1000' height='600'>
                     {({ ref, open }) => (
