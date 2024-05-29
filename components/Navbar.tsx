@@ -130,7 +130,7 @@ const Navbar: React.FC = () => {
                     onClick={() => setIsProfileMenuOpen((prev) => !prev)}>
                     <span className='absolute -inset-1.5'></span>
                     <span className='sr-only'>Open user menu</span>
-                    <Image className='h-8 w-8 rounded-full' src={profileDefault} alt='' />
+                    <Image className='h-8 w-8 rounded-full' src={session?.user?.image || profileDefault} alt='' width={40} height={40} />
                   </button>
                 </div>
 
@@ -143,7 +143,15 @@ const Navbar: React.FC = () => {
                     aria-orientation='vertical'
                     aria-labelledby='user-menu-button'
                     tabIndex={-1}>
-                    <Link href='/profile' className='block px-4 py-2 text-sm text-gray-700' role='menuitem' tabIndex={-1} id='user-menu-item-0'>
+                    <Link
+                      href='/profile'
+                      className='block px-4 py-2 text-sm text-gray-700'
+                      role='menuitem'
+                      tabIndex={-1}
+                      id='user-menu-item-0'
+                      onClick={() => {
+                        setIsProfileMenuOpen(false);
+                      }}>
                       Your Profile
                     </Link>
                     <Link
@@ -151,10 +159,21 @@ const Navbar: React.FC = () => {
                       className='block px-4 py-2 text-sm text-gray-700'
                       role='menuitem'
                       tabIndex={-1}
-                      id='user-menu-item-2'>
+                      id='user-menu-item-2'
+                      onClick={() => {
+                        setIsProfileMenuOpen(false);
+                      }}>
                       Saved Properties
                     </Link>
-                    <button className='block px-4 py-2 text-sm text-gray-700' role='menuitem' tabIndex={-1} id='user-menu-item-2'>
+                    <button
+                      onClick={() => {
+                        setIsProfileMenuOpen(false);
+                        signOut();
+                      }}
+                      className='block px-4 py-2 text-sm text-gray-700'
+                      role='menuitem'
+                      tabIndex={-1}
+                      id='user-menu-item-2'>
                       Sign Out
                     </button>
                   </div>

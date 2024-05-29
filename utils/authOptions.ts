@@ -4,6 +4,7 @@ import type { NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 
 export const authOptions: NextAuthOptions = {
+  secret: process.env.NEXTAUTH_URL_SECRET,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
@@ -32,7 +33,7 @@ export const authOptions: NextAuthOptions = {
         await UserModel.create({
           email: profile?.email,
           username,
-          image: profile?.image, // profile?.image
+          image: profile?.picture,
         });
       }
       // 4. Return true to allow sign in

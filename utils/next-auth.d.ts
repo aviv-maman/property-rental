@@ -9,4 +9,7 @@ declare module 'next-auth' {
   // interface User {
   //   email_verified: Date | null;
   // }
+  interface Profile {
+    picture?: string;
+  }
 }
