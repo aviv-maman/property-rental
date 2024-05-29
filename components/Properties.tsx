@@ -21,9 +21,9 @@ const Properties: React.FC = () => {
           throw new Error('Failed to fetch data');
         }
 
-        const data = await res.json();
-        setProperties(data.properties);
-        setTotalItems(data.total);
+        const data: { total: number | null; properties: Property[] | null; message: string } = await res.json();
+        setProperties(data?.properties || []);
+        setTotalItems(data?.total || 0);
       } catch (error) {
         console.log(error);
       } finally {
@@ -43,11 +43,11 @@ const Properties: React.FC = () => {
   ) : (
     <section className='px-4 py-6'>
       <div className='container-xl lg:container m-auto px-4 py-6'>
-        {properties.length === 0 ? (
+        {properties?.length === 0 ? (
           <p>No properties found</p>
         ) : (
           <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-            {properties.map((property) => (
+            {properties?.map((property) => (
               <PropertyCard key={property._id} property={property} />
             ))}
           </div>
