@@ -1,7 +1,10 @@
 import connectDB from '@/config/database';
 import PropertyModel from '@/models/Property';
 import type { Property } from '@/utils/database.types';
+import { getSessionUser } from '@/utils/getSessionUser';
 import { type NextRequest } from 'next/server';
+import type { Document } from 'mongoose';
+import cloudinary from '@/config/cloudinary';
 
 // GET /api/properties
 export const GET = async (request: NextRequest) => {
@@ -11,7 +14,7 @@ export const GET = async (request: NextRequest) => {
     const pageSize = Number(request.nextUrl.searchParams.get('pageSize')) || 6;
     const skip = (page - 1) * pageSize;
     const total = await PropertyModel.countDocuments({});
-    const properties: Property[] = await PropertyModel.find({}).skip(skip).limit(pageSize);
+    const properties: Document<Property>[] = await PropertyModel.find({}).skip(skip).limit(pageSize);
     const result = { total, properties, message: 'Properties fetched' };
     return new Response(JSON.stringify(result), {
       status: 200,
@@ -29,6 +32,11 @@ export const GET = async (request: NextRequest) => {
 
 export const POST = async (request: NextRequest) => {
   try {
+    await connectDB();
+    const session = await getSessionUser();
+    if (!session || !session.userId) {
+      return new Response(JSON.stringify({ message: 'Unauthorized' }), { status: 401, statusText: 'Unauthorized' });
+    }
     const formData = await request.formData();
 
     // Access all values from amenities and images
@@ -60,12 +68,45 @@ export const POST = async (request: NextRequest) => {
         email: formData.get('seller_info.email'),
         phone: formData.get('seller_info.phone'),
       },
+      owner: session.userId,
+      images: [] as FormDataEntryValue[],
     };
 
-    return new Response(JSON.stringify({ message: 'Success' }), {
-      status: 200,
-      statusText: 'OK',
-    });
+    // Upload image(s) to Cloudinary
+    const imageUploadPromises = [];
+
+    for (const image of images) {
+      if (typeof image === 'string') {
+        // Handle the case where image is a string.
+        continue;
+      }
+      const imageBuffer = await image.arrayBuffer();
+      const imageArray = Array.from(new Uint8Array(imageBuffer));
+      const imageData = Buffer.from(imageArray);
+
+      // Convert the image data to base64
+      const imageBase64 = imageData.toString('base64');
+
+      // Make request to upload to Cloudinary
+      const result = await cloudinary.uploader.upload(`data:image/png;base64,${imageBase64}`, {
+        folder: 'propertyrental',
+      });
+
+      imageUploadPromises.push(result.secure_url);
+
+      // Wait for all images to upload
+      const uploadedImages = await Promise.all(imageUploadPromises);
+      // Add uploaded images to the propertyData object
+      propertyData.images = uploadedImages;
+    }
+
+    const newProperty: Document<Property> = new PropertyModel(propertyData);
+    await newProperty.save();
+    return Response.redirect(`${process.env.NEXTAUTH_URL}/properties/${newProperty._id}`);
+    // return new Response(JSON.stringify({ message: 'Success' }), {
+    //   status: 200,
+    //   statusText: 'OK',
+    // });
   } catch (error) {
     return new Response('Failed to add property', { status: 500, statusText: 'Internal Server Error' });
   }
