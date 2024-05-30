@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-// import { useGlobalContext } from '@/context/GlobalContext';
+import { useGlobalContext } from '@/context/GlobalContextProvider';
 import type { MessageType } from '@/utils/database.types';
 
 interface MessageProps {
@@ -12,7 +12,7 @@ const Message: React.FC<MessageProps> = ({ message }) => {
   const [isRead, setIsRead] = useState(message.read);
   const [isDeleted, setIsDeleted] = useState(false);
 
-  // const { setUnreadCount } = useGlobalContext();
+  const { setUnreadCount } = useGlobalContext();
 
   const handleReadClick = async () => {
     try {
@@ -22,7 +22,7 @@ const Message: React.FC<MessageProps> = ({ message }) => {
       if (res.status === 200) {
         const { read } = await res.json();
         setIsRead(read);
-        // setUnreadCount((prevCount) => (read ? prevCount - 1 : prevCount + 1));
+        setUnreadCount((prevCount) => (read ? prevCount - 1 : prevCount + 1));
         toast.success(`Marked as ${read ? 'read' : 'new'}`);
       }
     } catch (error) {
@@ -38,7 +38,7 @@ const Message: React.FC<MessageProps> = ({ message }) => {
       });
       if (res.status === 200) {
         setIsDeleted(true);
-        // setUnreadCount((prevCount) => prevCount - 1);
+        setUnreadCount((prevCount) => prevCount - 1);
         toast.success('Message Deleted');
       }
     } catch (error) {

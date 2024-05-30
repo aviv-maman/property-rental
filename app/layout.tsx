@@ -7,6 +7,7 @@ import { ToastContainer } from 'react-toastify';
 import '@/assets/styles/globals.css';
 import 'photoswipe/dist/photoswipe.css';
 import 'react-toastify/dist/ReactToastify.css';
+import { GlobalContextProvider } from '@/context/GlobalContextProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -23,16 +24,18 @@ interface RootLayoutProps {
 
 const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
   return (
-    <AuthProvider>
-      <html lang='en'>
-        <body className={inter.className}>
-          <Navbar />
-          <main>{children}</main>
-          <Footer />
-          <ToastContainer />
-        </body>
-      </html>
-    </AuthProvider>
+    <GlobalContextProvider>
+      <AuthProvider>
+        <html lang='en'>
+          <body className={inter.className}>
+            <Navbar />
+            <main>{children}</main>
+            <Footer />
+            <ToastContainer />
+          </body>
+        </html>
+      </AuthProvider>
+    </GlobalContextProvider>
   );
 };
 
