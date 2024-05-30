@@ -13,4 +13,5 @@ const PropertiesPage: React.FC = async () => {
     </>
   );
 };
+
 export default PropertiesPage;
