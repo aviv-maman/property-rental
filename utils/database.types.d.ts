@@ -10,14 +10,14 @@ export type Property = {
     state: string;
     zipcode: string;
   };
-  beds: number;
-  baths: number;
-  square_feet: number;
+  beds: beds;
+  baths: beds;
+  square_feet: beds;
   amenities: string[];
   rates: {
-    nightly?: number;
-    weekly?: number;
-    monthly?: number;
+    nightly?: string;
+    weekly?: string;
+    monthly?: string;
   };
   seller_info: {
     name: string;

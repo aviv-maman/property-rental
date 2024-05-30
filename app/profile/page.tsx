@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react';
 import profileDefault from '@/assets/images/profile.png';
 import Spinner from '@/components/Spinner';
 import type { Property } from '@/utils/database.types';
+import { toast } from 'react-toastify';
 
 const ProfilePage: React.FC = () => {
   const { data: session } = useSession();
@@ -48,12 +49,13 @@ const ProfilePage: React.FC = () => {
         // Remove the property from state
         const updatedProperties = properties.filter((property) => property._id !== propertyId);
         setProperties(updatedProperties);
-        console.log('Property Deleted');
+        toast.success('Property Deleted');
       } else {
-        console.log('Failed to delete property');
+        toast.error('Failed to delete property');
       }
     } catch (error) {
       console.log(error);
+      toast.error('Failed to delete property');
     }
   };
 
