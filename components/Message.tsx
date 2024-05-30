@@ -19,16 +19,11 @@ const Message: React.FC<MessageProps> = ({ message }) => {
       const res = await fetch(`/api/messages/${message._id}`, {
         method: 'PUT',
       });
-
       if (res.status === 200) {
         const { read } = await res.json();
         setIsRead(read);
         // setUnreadCount((prevCount) => (read ? prevCount - 1 : prevCount + 1));
-        if (read) {
-          toast.success('Marked as read');
-        } else {
-          toast.success('Marked as new');
-        }
+        toast.success(`Marked as ${read ? 'read' : 'new'}`);
       }
     } catch (error) {
       console.log(error);
@@ -41,7 +36,6 @@ const Message: React.FC<MessageProps> = ({ message }) => {
       const res = await fetch(`/api/messages/${message._id}`, {
         method: 'DELETE',
       });
-
       if (res.status === 200) {
         setIsDeleted(true);
         // setUnreadCount((prevCount) => prevCount - 1);
@@ -53,9 +47,7 @@ const Message: React.FC<MessageProps> = ({ message }) => {
     }
   };
 
-  if (isDeleted) {
-    return null;
-  }
+  if (isDeleted) return null;
 
   return (
     <div className='relative bg-white p-4 rounded-md shadow-md border border-gray-200'>
