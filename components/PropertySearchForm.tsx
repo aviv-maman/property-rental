@@ -5,17 +5,14 @@ import { useRouter } from 'next/navigation';
 const PropertySearchForm: React.FC = () => {
   const [location, setLocation] = useState('');
   const [propertyType, setPropertyType] = useState('All');
-
   const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     if (location === '' && propertyType === 'All') {
       router.push('/properties');
     } else {
       const query = `?location=${location}&propertyType=${propertyType}`;
-
       router.push(`/properties/search-results${query}`);
     }
   };
