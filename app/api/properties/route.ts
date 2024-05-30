@@ -1,9 +1,7 @@
 import connectDB from '@/config/database';
 import PropertyModel from '@/models/Property';
-import type { Property } from '@/utils/database.types';
 import { getSessionUser } from '@/utils/getSessionUser';
 import { type NextRequest } from 'next/server';
-import type { Document } from 'mongoose';
 import cloudinary from '@/config/cloudinary';
 
 // GET /api/properties
@@ -14,7 +12,7 @@ export const GET = async (request: NextRequest) => {
     const pageSize = Number(request.nextUrl.searchParams.get('pageSize')) || 6;
     const skip = (page - 1) * pageSize;
     const total = await PropertyModel.countDocuments({});
-    const properties: Document<Property>[] = await PropertyModel.find({}).skip(skip).limit(pageSize);
+    const properties = await PropertyModel.find({}).skip(skip).limit(pageSize);
     const result = { total, properties, message: 'Properties fetched' };
     return new Response(JSON.stringify(result), {
       status: 200,
@@ -100,7 +98,7 @@ export const POST = async (request: NextRequest) => {
       propertyData.images = uploadedImages;
     }
 
-    const newProperty: Document<Property> = new PropertyModel(propertyData);
+    const newProperty = new PropertyModel(propertyData);
     await newProperty.save();
     return Response.redirect(`${process.env.NEXTAUTH_URL}/properties/${newProperty._id}`);
     // return new Response(JSON.stringify({ message: 'Success' }), {
@@ -108,6 +106,6 @@ export const POST = async (request: NextRequest) => {
     //   statusText: 'OK',
     // });
   } catch (error) {
-    return new Response('Failed to add property', { status: 500, statusText: 'Internal Server Error' });
+    return new Response(JSON.stringify({ message: 'Failed to add property' }), { status: 500, statusText: 'Internal Server Error' });
   }
 };
