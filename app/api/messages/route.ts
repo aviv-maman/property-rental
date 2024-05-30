@@ -1,5 +1,5 @@
 import connectDB from '@/config/database';
-import Message from '@/models/Message';
+import MessageModel from '@/models/Message';
 import { getSessionUser } from '@/utils/getSessionUser';
 import type { NextRequest } from 'next/server';
 
@@ -16,11 +16,11 @@ export const GET = async () => {
       });
     }
     const { userId } = sessionUser;
-    const readMessages = await Message.find({ recipient: userId, read: true })
+    const readMessages = await MessageModel.find({ recipient: userId, read: true })
       .sort({ createdAt: -1 }) // Sort read messages in asc order
       .populate('sender', 'username')
       .populate('property', 'name');
-    const unreadMessages = await Message.find({
+    const unreadMessages = await MessageModel.find({
       recipient: userId,
       read: false,
     })
@@ -49,7 +49,7 @@ export const POST = async (request: NextRequest) => {
     if (user.id === recipient) {
       return new Response(JSON.stringify({ message: 'Can not send a message to yourself' }), { status: 400 });
     }
-    const newMessage = new Message({
+    const newMessage = new MessageModel({
       sender: user.id,
       recipient,
       property,

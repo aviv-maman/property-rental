@@ -29,3 +29,27 @@ export type Property = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type MessageType = {
+  _id: string;
+  sender: User;
+  recipient: User;
+  property: Property;
+  name: string;
+  email: string;
+  phone: string;
+  body: string;
+  read: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
+type User = {
+  _id: string;
+  email: string;
+  username: string;
+  image: string;
+  bookmarks: string[];
+  createdAt: string;
+  updatedAt: string;
+};

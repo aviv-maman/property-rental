@@ -1,5 +1,5 @@
 import connectDB from '@/config/database';
-import Property from '@/models/Property';
+import PropertyModel from '@/models/Property';
 import type { NextRequest } from 'next/server';
 
 // GET /api/properties/search
@@ -27,7 +27,7 @@ export const GET = async (request: NextRequest) => {
       const typePattern = new RegExp(propertyType, 'i');
       query.type = typePattern;
     }
-    const properties = await Property.find(query);
+    const properties = await PropertyModel.find(query);
     return new Response(JSON.stringify(properties), {
       status: 200,
     });

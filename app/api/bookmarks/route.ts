@@ -1,5 +1,5 @@
 import connectDB from '@/config/database';
-import User from '@/models/User';
+import UserModel from '@/models/User';
 import PropertyModel from '@/models/Property';
 import { getSessionUser } from '@/utils/getSessionUser';
 import type { NextRequest } from 'next/server';
@@ -16,8 +16,11 @@ export const GET = async () => {
     }
     const { userId } = sessionUser;
     // Find user in database
-    const user = await User.findOne({ _id: userId });
+    const user = await UserModel.findOne({ _id: userId });
     // Get users bookmarks
+    if (!user) {
+      return new Response('User not found', { status: 404 });
+    }
     const bookmarks = await PropertyModel.find({ _id: { $in: user.bookmarks } });
     return new Response(JSON.stringify(bookmarks), { status: 200 });
   } catch (error) {
@@ -36,7 +39,10 @@ export const POST = async (request: NextRequest) => {
     }
     const { userId } = sessionUser;
     // Find user in database
-    const user = await User.findOne({ _id: userId });
+    const user = await UserModel.findOne({ _id: userId });
+    if (!user) {
+      return new Response('User not found', { status: 404 });
+    }
     // Check if property is bookmarked
     let isBookmarked = user.bookmarks.includes(propertyId);
     let message;

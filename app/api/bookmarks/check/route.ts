@@ -1,5 +1,5 @@
 import connectDB from '@/config/database';
-import User from '@/models/User';
+import UserModel from '@/models/User';
 import { getSessionUser } from '@/utils/getSessionUser';
 import type { NextRequest } from 'next/server';
 
@@ -15,7 +15,10 @@ export const POST = async (request: NextRequest) => {
     }
     const { userId } = sessionUser;
     // Find user in database
-    const user = await User.findOne({ _id: userId });
+    const user = await UserModel.findOne({ _id: userId });
+    if (!user) {
+      return new Response('User not found', { status: 404 });
+    }
     // Check if property is bookmarked
     const isBookmarked = user.bookmarks.includes(propertyId);
     return new Response(JSON.stringify({ isBookmarked }), {

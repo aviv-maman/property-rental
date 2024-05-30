@@ -1,5 +1,5 @@
 import connectDB from '@/config/database';
-import Property from '@/models/Property';
+import PropertyModel from '@/models/Property';
 import type { NextRequest } from 'next/server';
 
 type RequestParams = { params: { id: string } };
@@ -12,7 +12,7 @@ export const GET = async (request: NextRequest, { params }: RequestParams) => {
     if (!userId) {
       return new Response('User ID is required', { status: 400, statusText: 'Bad Request' });
     }
-    const properties = await Property.find({ owner: userId });
+    const properties = await PropertyModel.find({ owner: userId });
     return new Response(JSON.stringify(properties), {
       status: 200,
       statusText: 'OK',
