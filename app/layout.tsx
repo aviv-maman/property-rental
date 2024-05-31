@@ -24,18 +24,18 @@ interface RootLayoutProps {
 
 const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
   return (
-    <GlobalContextProvider>
-      <AuthProvider>
-        <html lang='en'>
-          <body className={inter.className}>
+    <html lang='en'>
+      <body className={inter.className}>
+        <AuthProvider>
+          <GlobalContextProvider>
             <Navbar />
             <main>{children}</main>
             <Footer />
             <ToastContainer />
-          </body>
-        </html>
-      </AuthProvider>
-    </GlobalContextProvider>
+          </GlobalContextProvider>
+        </AuthProvider>
+      </body>
+    </html>
   );
 };
 

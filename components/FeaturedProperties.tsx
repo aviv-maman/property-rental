@@ -1,10 +1,11 @@
 import connectDB from '@/config/database';
 import FeaturedPropertyCard from './FeaturedPropertyCard';
 import PropertyModel from '@/models/Property';
+import type { Property } from '@/utils/database.types';
 
 const FeaturedProperties: React.FC = async () => {
   await connectDB();
-  const properties = (await PropertyModel.find({ is_featured: true }).lean()) as any[];
+  const properties = (await PropertyModel.find({ is_featured: true }).lean()) as Property[];
 
   return (
     properties?.length &&

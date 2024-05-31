@@ -49,7 +49,7 @@ type User = {
   email: string;
   username: string;
   image: string;
-  bookmarks: string[];
+  bookmarks: Property[];
   createdAt: string;
   updatedAt: string;
 };

@@ -4,6 +4,8 @@ import { useSession } from 'next-auth/react';
 import { toast } from 'react-toastify';
 import { FaBookmark } from 'react-icons/fa';
 import type { Property } from '@/utils/database.types';
+import checkBookmarkStatus from '@/app/actions/checkBookmarkStatus';
+import bookmarkProperty from '@/app/actions/bookmarkProperty';
 
 interface BookmarkButtonProps {
   property: Property | null;
@@ -21,61 +23,30 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({ property }) => {
       setLoading(false);
       return;
     }
-
-    const checkBookmarkStatus = async () => {
-      if (!property) return;
-      try {
-        const res = await fetch('/api/bookmarks/check', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            propertyId: property._id,
-          }),
-        });
-
-        if (res.status === 200) {
-          const data = await res.json();
-          setIsBookmarked(data.isBookmarked);
-        }
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    checkBookmarkStatus();
+    if (!property?._id) return;
+    // NOTE: here we can use a server action to check the bookmark status for a
+    // specific use for the property.
+    checkBookmarkStatus(property._id).then((res) => {
+      if (res.error) toast.error(res.error);
+      if (res.isBookmarked) setIsBookmarked(res.isBookmarked);
+      setLoading(false);
+    });
   }, [property?._id, userId]);
 
   const handleClick = async () => {
-    if (!property) return;
     if (!userId) {
       toast.error('You need to sign in to bookmark a property');
       return;
     }
 
-    try {
-      const res = await fetch('/api/bookmarks', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          propertyId: property._id,
-        }),
-      });
-
-      if (res.status === 200) {
-        const data = await res.json();
-        toast.success(data.message);
-        setIsBookmarked(data.isBookmarked);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error('Something went wrong');
-    }
+    // NOTE: here we can use a server action to mark bookmark a property for the
+    // user.
+    if (!property) return;
+    bookmarkProperty(property._id).then((res) => {
+      if (res.error) return toast.error(res.error);
+      setIsBookmarked(res.isBookmarked || false);
+      toast.success(res.message);
+    });
   };
 
   if (loading) return <p className='text-center'>Loading...</p>;

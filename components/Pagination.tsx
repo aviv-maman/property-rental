@@ -1,30 +1,29 @@
+import Link from 'next/link';
+
 interface PaginationProps {
-  page: number;
-  pageSize: number;
-  totalItems: number;
-  onPageChange: (page: number) => void;
+  page?: number;
+  pageSize?: number;
+  totalItems?: number;
 }
 
-const Pagination: React.FC<PaginationProps> = ({ page, pageSize, totalItems, onPageChange }) => {
+const Pagination: React.FC<PaginationProps> = ({ page = 1, pageSize = 6, totalItems = 0 }) => {
   const totalPages = Math.ceil(totalItems / pageSize);
-
-  const handlePageChange = (newPage: number) => {
-    if (newPage >= 1 && newPage <= totalPages) {
-      onPageChange(newPage);
-    }
-  };
 
   return (
     <section className='container mx-auto flex justify-center items-center my-8'>
-      <button className='mr-2 px-2 py-1 border border-gray-300 rounded' disabled={page === 1} onClick={() => handlePageChange(page - 1)}>
-        Previous
-      </button>
+      {page > 1 ? (
+        <Link className='mr-2 px-2 py-1 border border-gray-300 rounded' href={`/properties?page=${page - 1}`}>
+          Previous
+        </Link>
+      ) : null}
       <span className='mx-2'>
-        Page {page} of {totalPages}
+        Page {page} of {totalPages || 1}
       </span>
-      <button className='ml-2 px-2 py-1 border border-gray-300 rounded' disabled={page === totalPages} onClick={() => handlePageChange(page + 1)}>
-        Next
-      </button>
+      {page < totalPages ? (
+        <Link className='ml-2 px-2 py-1 border border-gray-300 rounded' href={`/properties?page=${page + 1}`}>
+          Next
+        </Link>
+      ) : null}
     </section>
   );
 };

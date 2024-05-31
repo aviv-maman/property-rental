@@ -1,24 +1,17 @@
-import mongoose from 'mongoose';
-
-let connected = false;
+import { connect, set } from 'mongoose';
 
 const connectDB = async () => {
-  mongoose.set('strictQuery', true);
-
+  const connection = { isEstablished: false };
+  set('strictQuery', true);
   // If the database is already connected, don't connect again
-  if (connected) {
-    console.log('MongoDB is already connected...');
+  if (connection.isEstablished) {
+    console.warn('MongoDB is already connected.');
     return;
   }
-
   // Connect to MongoDB
-  try {
-    await mongoose.connect(process.env.MONGODB_URI as string);
-    connected = true;
-    console.log('MongoDB connected...');
-  } catch (error) {
-    console.error(error);
-  }
+  await connect(process.env.MONGODB_URI as string);
+  connection.isEstablished = true;
+  console.log('MongoDB connected.');
 };
 
 export default connectDB;

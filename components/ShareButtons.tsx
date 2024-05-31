@@ -1,3 +1,4 @@
+'use client';
 import {
   FacebookShareButton,
   TwitterShareButton,
@@ -12,10 +13,11 @@ import type { Property } from '@/utils/database.types';
 
 interface ShareButtonsProps {
   property: Property | null;
+  PUBLIC_DOMAIN: string;
 }
 
-const ShareButtons: React.FC<ShareButtonsProps> = ({ property }) => {
-  const shareUrl = `${process.env.NEXT_PUBLIC_DOMAIN}/properties/${property?._id}`;
+const ShareButtons: React.FC<ShareButtonsProps> = ({ property, PUBLIC_DOMAIN }) => {
+  const shareUrl = `${PUBLIC_DOMAIN}/properties/${property?._id}`;
 
   return (
     <>

@@ -1,7 +1,8 @@
 'use client';
-import { type Dispatch, createContext, useContext, useMemo, useState, type SetStateAction } from 'react';
+import getUnreadMessageCount from '@/app/actions/getUnreadMessageCount';
+import { useSession } from 'next-auth/react';
+import { type Dispatch, createContext, useContext, useMemo, useState, type SetStateAction, useEffect } from 'react';
 
-// Create context
 type GlobalStore = {
   unreadCount: number;
   setUnreadCount: Dispatch<SetStateAction<number>>;
@@ -12,10 +13,19 @@ const GlobalContext = createContext<GlobalStore>({
   setUnreadCount: () => 0,
 });
 
-// Create a provider
 export function GlobalContextProvider({ children }: { children: React.ReactNode }) {
   const [unreadCount, setUnreadCount] = useState(0);
   const contextValue = useMemo(() => ({ unreadCount, setUnreadCount }), [unreadCount, setUnreadCount]);
+
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    if (session && session.user) {
+      getUnreadMessageCount().then((res) => {
+        if (res.count) setUnreadCount(res.count);
+      });
+    }
+  }, [session]);
 
   return <GlobalContext.Provider value={contextValue}>{children}</GlobalContext.Provider>;
 }

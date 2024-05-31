@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useGlobalContext } from '@/context/GlobalContextProvider';
 import type { MessageType } from '@/utils/database.types';
+import markMessageAsRead from '@/app/actions/markMessageAsRead';
+import deleteMessage from '@/app/actions/deleteMessage';
 
 interface MessageProps {
   message: MessageType;
@@ -15,39 +17,23 @@ const Message: React.FC<MessageProps> = ({ message }) => {
   const { setUnreadCount } = useGlobalContext();
 
   const handleReadClick = async () => {
-    try {
-      const res = await fetch(`/api/messages/${message._id}`, {
-        method: 'PUT',
-      });
-      if (res.status === 200) {
-        const { read } = await res.json();
-        setIsRead(read);
-        setUnreadCount((prevCount) => (read ? prevCount - 1 : prevCount + 1));
-        toast.success(`Marked as ${read ? 'read' : 'new'}`);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error('Something went wrong');
-    }
+    const read = await markMessageAsRead(message._id);
+
+    setIsRead(read);
+    setUnreadCount((prevCount) => (read ? prevCount - 1 : prevCount + 1));
+    toast.success(`Marked as ${read ? 'read' : 'new'}`);
   };
 
   const handleDeleteClick = async () => {
-    try {
-      const res = await fetch(`/api/messages/${message._id}`, {
-        method: 'DELETE',
-      });
-      if (res.status === 200) {
-        setIsDeleted(true);
-        setUnreadCount((prevCount) => (isRead ? prevCount : prevCount - 1));
-        toast.success('Message Deleted');
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error('Message was not deleted');
-    }
+    await deleteMessage(message._id);
+    setIsDeleted(true);
+    setUnreadCount((prevCount) => (isRead ? prevCount : prevCount - 1));
+    toast.success('Message Deleted');
   };
 
-  if (isDeleted) return null;
+  if (isDeleted) {
+    return <p>Deleted message</p>;
+  }
 
   return (
     <div className='relative bg-white p-4 rounded-md shadow-md border border-gray-200'>

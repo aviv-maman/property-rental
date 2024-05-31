@@ -1,7 +1,22 @@
 import PropertySearchForm from '@/components/PropertySearchForm';
 import Properties from '@/components/Properties';
+import connectDB from '@/config/database';
+import PropertyModel from '@/models/Property';
+import type { Property } from '@/utils/database.types';
 
-const PropertiesPage: React.FC = async () => {
+interface PropertiesPageProps {
+  searchParams?: {
+    page?: string;
+    pageSize?: string;
+  };
+}
+
+const PropertiesPage: React.FC<PropertiesPageProps> = async ({ searchParams: { page = '1', pageSize = '6' } = {} }) => {
+  await connectDB();
+  const skip = (Number(page) - 1) * Number(pageSize);
+  const total = await PropertyModel.countDocuments({});
+  const properties = (await PropertyModel.find({}).skip(skip).limit(Number(pageSize))) as Property[] | null;
+
   return (
     <>
       <section className='bg-blue-700 py-4'>
@@ -9,7 +24,7 @@ const PropertiesPage: React.FC = async () => {
           <PropertySearchForm />
         </div>
       </section>
-      <Properties />
+      <Properties properties={properties} total={total} page={Number(page)} pageSize={Number(pageSize)} />
     </>
   );
 };

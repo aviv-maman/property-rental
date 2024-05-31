@@ -1,30 +1,8 @@
 'use client';
-import { useEffect } from 'react';
 import { useGlobalContext } from '@/context/GlobalContextProvider';
-import type { Session } from 'next-auth';
 
-interface UnreadMessageCountProps {
-  session: Session;
-}
-
-const UnreadMessageCount: React.FC<UnreadMessageCountProps> = ({ session }) => {
-  const { unreadCount, setUnreadCount } = useGlobalContext();
-
-  useEffect(() => {
-    if (!session) return;
-    const fetchUnreadMessages = async () => {
-      try {
-        const res = await fetch('/api/messages/unread-count');
-        if (res.status === 200) {
-          const data = await res.json();
-          setUnreadCount(() => data);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchUnreadMessages();
-  }, [session]);
+const UnreadMessageCount: React.FC = () => {
+  const { unreadCount } = useGlobalContext();
 
   return (
     unreadCount > 0 && (
