@@ -1,10 +1,12 @@
 import Link from 'next/link';
 import PropertyCard from '@/components/PropertyCard';
-import { fetchProperties } from '@/utils/requests';
+import connectDB from '@/config/database';
+import PropertyModel from '@/models/Property';
 
 const HomeProperties: React.FC = async () => {
-  const data = await fetchProperties();
-  const recentProperties = data?.properties?.sort(() => Math.random() - Math.random()).slice(0, 3);
+  await connectDB();
+  // Get the 3 latest properties
+  const recentProperties = (await PropertyModel.find({}).sort({ createdAt: -1 }).limit(3).lean()) as any[];
 
   return (
     <>
