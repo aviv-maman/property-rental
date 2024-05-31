@@ -71,11 +71,13 @@ const PropertySchema = new Schema(
         type: String,
       },
     },
-    images: [
-      {
-        type: String,
+    images: {
+      type: [String],
+      validate: {
+        validator: (value: string[]) => value.length <= 4,
+        message: (props: { value: string[] }) => `A property must have a maximum of 4 images, but got ${props.value.length}`,
       },
-    ],
+    },
     is_featured: {
       type: Boolean,
       default: false,

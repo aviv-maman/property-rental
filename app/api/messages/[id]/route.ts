@@ -28,7 +28,7 @@ export const PUT = async (request: NextRequest, { params }: RequestParams) => {
     // Update message to read/unread depending on the current status
     message.read = !message.read;
     await message.save();
-    return new Response(JSON.stringify(message), { status: 200 });
+    return Response.json(message);
   } catch (error) {
     console.log(error);
     return new Response('Something went wrong', { status: 500 });

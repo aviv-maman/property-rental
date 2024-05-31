@@ -6,8 +6,8 @@ const override = {
   margin: '100px auto',
 };
 
-const LoadingPage: React.FC<{ loading?: boolean }> = ({ loading }) => {
-  return <ClipLoader color='#3b82f6' loading={loading} cssOverride={override} size={150} aria-label='Loading Spinner' />;
+const LoadingPage: React.FC = () => {
+  return <ClipLoader color='#3b82f6' cssOverride={override} size={150} aria-label='Loading Spinner' />;
 };
 
 export default LoadingPage;

@@ -13,12 +13,9 @@ export const GET = async (request: NextRequest, { params }: RequestParams) => {
       return new Response('User ID is required', { status: 400, statusText: 'Bad Request' });
     }
     const properties = await PropertyModel.find({ owner: userId });
-    return new Response(JSON.stringify(properties), {
-      status: 200,
-      statusText: 'OK',
-    });
+    return Response.json(properties);
   } catch (error) {
     console.log(error);
-    return new Response(JSON.stringify({ message: 'Failed to get property' }), { status: 500, statusText: 'Internal Server Error' });
+    return Response.json({ message: 'Failed to get property' }), { status: 500, statusText: 'Internal Server Error' };
   }
 };

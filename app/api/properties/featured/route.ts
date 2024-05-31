@@ -11,9 +11,7 @@ export const GET = async (request: NextRequest) => {
     });
     const total = await PropertyModel.countDocuments({});
     const result = { total, properties, message: 'Properties fetched' };
-    return new Response(JSON.stringify(result), {
-      status: 200,
-    });
+    return Response.json(result);
   } catch (error) {
     console.log(error);
     return new Response('Something Went Wrong', { status: 500 });

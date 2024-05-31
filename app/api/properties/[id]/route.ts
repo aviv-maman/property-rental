@@ -11,11 +11,11 @@ export const GET = async (request: NextRequest, { params }: RequestParams) => {
   try {
     await connectDB();
     const property = await PropertyModel.findById(params.id);
-    if (!property) return new Response(JSON.stringify({ message: 'Property not found' }), { status: 404, statusText: 'Not Found' });
-    return new Response(JSON.stringify(property), { status: 200, statusText: 'OK' });
+    if (!property) return Response.json({ message: 'Property not found' }), { status: 404, statusText: 'Not Found' };
+    return Response.json(property);
   } catch (error) {
     console.log(error);
-    return new Response(JSON.stringify({ message: 'Something went wrong' }), { status: 500, statusText: 'Internal Server Error' });
+    return Response.json({ message: 'Something went wrong' }), { status: 500, statusText: 'Internal Server Error' };
   }
 };
 
@@ -109,10 +109,7 @@ export const PUT = async (request: NextRequest, { params }: RequestParams) => {
     };
     // Update property in database
     const updatedProperty = await PropertyModel.findByIdAndUpdate(id, propertyData);
-    return new Response(JSON.stringify(updatedProperty), {
-      status: 200,
-      statusText: 'OK',
-    });
+    return Response.json(updatedProperty);
   } catch (error) {
     console.log(error);
     return new Response('Failed to add property', { status: 500, statusText: 'Internal Server Error' });

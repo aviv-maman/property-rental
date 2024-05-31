@@ -11,9 +11,7 @@ export const GET = async () => {
     await connectDB();
     const sessionUser = await getSessionUser();
     if (!sessionUser || !sessionUser.user) {
-      return new Response(JSON.stringify('User ID is required'), {
-        status: 401,
-      });
+      return new Response('User ID is required'), { status: 401 };
     }
     const { userId } = sessionUser;
     const readMessages = await MessageModel.find({ recipient: userId, read: true })
@@ -28,7 +26,7 @@ export const GET = async () => {
       .populate('sender', 'username')
       .populate('property', 'name');
     const messages = [...unreadMessages, ...readMessages];
-    return new Response(JSON.stringify(messages), { status: 200 });
+    return Response.json(messages);
   } catch (error) {
     console.log(error);
     return new Response('Something went wrong', { status: 500 });
@@ -42,12 +40,12 @@ export const POST = async (request: NextRequest) => {
     const { name, email, phone, message, property, recipient } = await request.json();
     const sessionUser = await getSessionUser();
     if (!sessionUser || !sessionUser.user) {
-      return new Response(JSON.stringify({ message: 'You must be logged in to send a message' }), { status: 401 });
+      return Response.json({ message: 'You must be logged in to send a message' }), { status: 401 };
     }
     const { user } = sessionUser;
     // Can not send message to self
     if (user.id === recipient) {
-      return new Response(JSON.stringify({ message: 'Can not send a message to yourself' }), { status: 400 });
+      return Response.json({ message: 'Can not send a message to yourself' }), { status: 400 };
     }
     const newMessage = new MessageModel({
       sender: user.id,
@@ -59,9 +57,7 @@ export const POST = async (request: NextRequest) => {
       body: message,
     });
     await newMessage.save();
-    return new Response(JSON.stringify({ message: 'Message Sent' }), {
-      status: 200,
-    });
+    return Response.json({ message: 'Message Sent' });
   } catch (error) {
     console.log(error);
     return new Response('Something went wrong', { status: 500 });

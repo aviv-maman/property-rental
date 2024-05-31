@@ -14,17 +14,14 @@ export const GET = async (request: NextRequest) => {
     const total = await PropertyModel.countDocuments({});
     const properties = await PropertyModel.find({}).skip(skip).limit(pageSize);
     const result = { total, properties, message: 'Properties fetched' };
-    return new Response(JSON.stringify(result), {
-      status: 200,
-      statusText: 'OK',
-    });
+    return Response.json(result);
   } catch (error) {
     if (error instanceof Error) {
       //(EvalError || RangeError || ReferenceError || SyntaxError || TypeError || URIError)
       console.error(`${error.name} - ${error.message}`);
     }
     const message = error instanceof Error ? error.message : 'Something went wrong';
-    return new Response(JSON.stringify({ total: null, properties: null, message }), { status: 500, statusText: 'Internal Server Error' });
+    return Response.json({ total: null, properties: null, message }), { status: 500, statusText: 'Internal Server Error' };
   }
 };
 
@@ -33,7 +30,7 @@ export const POST = async (request: NextRequest) => {
     await connectDB();
     const session = await getSessionUser();
     if (!session || !session.userId) {
-      return new Response(JSON.stringify({ message: 'Unauthorized' }), { status: 401, statusText: 'Unauthorized' });
+      return Response.json({ message: 'Unauthorized' }), { status: 401, statusText: 'Unauthorized' };
     }
     const formData = await request.formData();
 
@@ -71,7 +68,7 @@ export const POST = async (request: NextRequest) => {
     };
 
     // Upload image(s) to Cloudinary
-    const imageUploadPromises = [];
+    const imageUrls = [];
 
     for (const image of images) {
       if (typeof image === 'string') {
@@ -90,10 +87,10 @@ export const POST = async (request: NextRequest) => {
         folder: 'propertyrental',
       });
 
-      imageUploadPromises.push(result.secure_url);
+      imageUrls.push(result.secure_url);
 
       // Wait for all images to upload
-      const uploadedImages = await Promise.all(imageUploadPromises);
+      const uploadedImages = await Promise.all(imageUrls);
       // Add uploaded images to the propertyData object
       propertyData.images = uploadedImages;
     }
@@ -101,11 +98,8 @@ export const POST = async (request: NextRequest) => {
     const newProperty = new PropertyModel(propertyData);
     await newProperty.save();
     return Response.redirect(`${process.env.NEXTAUTH_URL}/properties/${newProperty._id}`);
-    // return new Response(JSON.stringify({ message: 'Success' }), {
-    //   status: 200,
-    //   statusText: 'OK',
-    // });
+    // return Response.json({ message: 'Success' });
   } catch (error) {
-    return new Response(JSON.stringify({ message: 'Failed to add property' }), { status: 500, statusText: 'Internal Server Error' });
+    return Response.json({ message: 'Failed to add property' }), { status: 500, statusText: 'Internal Server Error' };
   }
 };
