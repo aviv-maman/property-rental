@@ -1,9 +1,41 @@
-import { Schema, model, models } from 'mongoose';
+import mongoose from 'mongoose';
 
-const PropertySchema = new Schema(
+// interface Property extends mongoose.Document {
+//   _id: mongoose.Types.ObjectId;
+//   owner: mongoose.Types.ObjectId;
+//   name: string;
+//   type: string;
+//   description: string;
+//   location: {
+//     street: string;
+//     city: string;
+//     state: string;
+//     zipcode: string;
+//   };
+//   beds: number;
+//   baths: number;
+//   square_feet: number;
+//   amenities: string[];
+//   rates: {
+//     nightly: number;
+//     weekly: number;
+//     monthly: number;
+//   };
+//   seller_info: {
+//     name: string;
+//     email: string;
+//     phone: string;
+//   };
+//   images: string[];
+//   is_featured: boolean;
+//   createdAt: NativeDate;
+//   updatedAt: NativeDate;
+// }
+
+const PropertySchema = new mongoose.Schema(
   {
     owner: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
     },
@@ -88,6 +120,6 @@ const PropertySchema = new Schema(
   }
 );
 
-const PropertyModel = models.Property || model('Property', PropertySchema);
+const PropertyModel = mongoose.models.Property || mongoose.model('Property', PropertySchema);
 
 export default PropertyModel;

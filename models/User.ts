@@ -1,6 +1,16 @@
-import { Schema, model, models } from 'mongoose';
+import mongoose from 'mongoose';
 
-const UserSchema = new Schema(
+// interface User extends mongoose.Document {
+//   _id: mongoose.Types.ObjectId;
+//   email: string;
+//   username: string;
+//   image: string;
+//   bookmarks: mongoose.Types.ObjectId[];
+//   createdAt: NativeDate;
+//   updatedAt: NativeDate;
+// }
+
+const UserSchema = new mongoose.Schema(
   {
     email: {
       type: String,
@@ -16,7 +26,7 @@ const UserSchema = new Schema(
     },
     bookmarks: [
       {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Property',
       },
     ],
@@ -26,6 +36,6 @@ const UserSchema = new Schema(
   }
 );
 
-const UserModel = models.User || model('User', UserSchema);
+const UserModel = mongoose.models.User || mongoose.model('User', UserSchema);
 
 export default UserModel;

@@ -1,19 +1,33 @@
-import { model, models, Schema } from 'mongoose';
+import mongoose from 'mongoose';
 
-const MessageSchema = new Schema(
+// interface Message extends mongoose.Document {
+//   _id: mongoose.Types.ObjectId;
+//   sender: mongoose.Types.ObjectId;
+//   recipient: mongoose.Types.ObjectId;
+//   property: mongoose.Types.ObjectId;
+//   name: string;
+//   email: string;
+//   phone: string;
+//   body: string;
+//   read: boolean;
+//   createdAt: NativeDate;
+//   updatedAt: NativeDate;
+// }
+
+const MessageSchema = new mongoose.Schema(
   {
     sender: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
     },
     recipient: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
     },
     property: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: 'Property',
       required: true,
     },
@@ -41,6 +55,6 @@ const MessageSchema = new Schema(
   }
 );
 
-const MessageModel = models.Message || model('Message', MessageSchema);
+const MessageModel = mongoose.models.Message || mongoose.model('Message', MessageSchema);
 
 export default MessageModel;
