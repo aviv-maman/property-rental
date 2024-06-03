@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+An app to list and search for rental properties. Built with Next.js and MongoDB.
+<img src="https://raw.githubusercontent.com/aviv-maman/property-rental/master/public/preview.jpeg" width="600">
 
-## Getting Started
+## Features
 
-First, run the development server:
+- Responsive design
+- User authentication with Google & Next Auth
+- CRUD operations
+- Image upload
+- Mapbox maps
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Built with
+
+- [React](https://react.dev)
+- [Next.js](https://nextjs.org)
+- [MongoDB](https://www.mongodb.com)
+- [NextAuth.js](https://next-auth.js.org)
+- [Cloudinary](https://cloudinary.com)
+- [Mapbox](https://www.mapbox.com)
+- [Tailwind CSS](https://tailwindcss.com)
+
+## Usage
+
+1. Clone the repository
+
+```
+git clone https://github.com/aviv-maman/property-rental
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Rename the `.env.example` file to `.env.local` and fill in the required environment variables according to the next steps.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Sign Up on [MongoDB](https://www.mongodb.com) to get your MongoDB connection string from your MongoDB Atlas cluster and add it to `MONGODB_URI`.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+4. Sign Up on [Google](https://console.cloud.google.com) to get your Google client ID and client secret from your Google console account and add them to `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`.
 
-## Learn More
+5. Write a secret to `NEXTAUTH_SECRET`. You can generate with the following commands:
 
-To learn more about Next.js, take a look at the following resources:
+   ```
+   openssl rand -base64 32
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   or
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+   ```ts
+   $randomBytes = New-Object byte[] 32
+   $randomNumberGenerator = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+   $randomNumberGenerator.GetBytes($randomBytes)
+   $base64String = [Convert]::ToBase64String($randomBytes)
+   $base64String
+   ```
 
-## Deploy on Vercel
+6. Sign Up on [Cloudinary](https://cloudinary.com) to get your Cloudinary cloud name, API key, and API secret from your Cloudinary account and add them to `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, and `CLOUDINARY_API_SECRET`.
+7. Sign Up on [Mapbox](https://www.mapbox.com) to get your Mapbox token from your Mapbox account and add it to `NEXT_PUBLIC_MAPBOX_TOKEN`.
+8. Sign Up on [LocationIQ](https://locationiq.com) to get your LocationIQ API key and add it to `NEXT_PUBLIC_LOCATIONIQ_API_KEY`.
+9. Install dependencies
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+npm install
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+10. Run the development server
+
+```
+npm run dev
+```
